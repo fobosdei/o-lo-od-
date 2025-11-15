@@ -1,0 +1,28 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "src/renderer/src/env.d.ts",
+    "src/renderer/src/**/*",
+    "src/renderer/src/**/*.tsx",
+    "src/common/**/*.ts",
+    "src/common/**/*.json",
+    "src/preload/*.d.ts"
+, "src/main/auto.update.ts"  ],
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "strictNullChecks": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@renderer/*": [
+        "src/renderer/src/*",
+      ],
+      "@common/*": [
+        "src/common/*",
+      ]
+    }
+  }
+}

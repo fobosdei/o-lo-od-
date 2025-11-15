@@ -1,0 +1,66 @@
+on:
+  workflow_dispatch:
+name: build and release
+permissions:
+  contents: write
+jobs:
+  build:
+    environment: lockpass
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # When set to true, GitHub cancels all in-progress jobs if any matrix job fails.
+      fail-fast: true
+      # The maximum number of jobs that can run simultaneously
+      max-parallel: 1
+      # matrix:
+      #   os: [ubuntu-latest]
+      #   host: [x64]
+      #   target: [x64]
+      #   node: [20]
+      # matrix:
+      #   os: [ubuntu-latest, windows-latest, macos-latest]
+      #   host: [x64]
+      #   target: [x64]
+      #   node: [20]
+      #   include:
+      #     - os: windows-latest
+      #       host: x86
+      #       target: x86
+      #       node: 20
+      #     - os: macos-latest
+      #       host: arm64
+      #       target: arm64
+      #       node: 20
+      matrix:
+        os: [windows-latest]
+        host: [x64]
+        target: [x64]
+        node: [20]
+        include:
+          - os: windows-latest
+            host: x86
+            target: x86
+            node: 20
+    name: os=${{ matrix.os }}  host=${{ matrix.host }}, target=${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          architecture: ${{ matrix.host }}
+      - name: Install npm dependencies
+        run: npm install
+      - name: install linux dependencies
+        if: contains(matrix.os, 'ubuntu')
+        run: |
+          sudo snap install snapcraft --classic
+      - name: Build
+        env:
+          MAIN_VITE_ALIYUN_CLIENT_SECRET: ${{ secrets.MAIN_VITE_ALIYUN_CLIENT_SECRET }}
+        run: |
+          npm run build
+
+      - name: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release

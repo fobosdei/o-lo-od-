@@ -1,0 +1,59 @@
+appId: com.lockpass.app
+productName: lockpass
+directories:
+  buildResources: build
+protocols:
+  name: lockpass
+  schemes:
+    - lockpass
+  # role: Editor
+files:
+  # - '!node_modules/**/*'
+  - 'out/**/*'
+  - 'resources/**/*'
+  - 'package.json'
+
+electronLanguages:
+  - en-US
+  - zh-CN
+asarUnpack:
+  - resources/**
+  - '**/*.node'
+
+win:
+  executableName: lockpass
+nsis:
+  oneClick: false # 是否一键安装,让用户选择
+  allowToChangeInstallationDirectory: true # 是否允许用户更改安装目录
+  artifactName: ${name}-${version}-${platform}-${arch}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+  deleteAppDataOnUninstall: true
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+dmg:
+  artifactName: ${name}-${version}-${platform}-${arch}.${ext}
+linux:
+  artifactName: ${name}-${version}-${platform}-${arch}.${ext}
+  target:
+    - AppImage
+    # - snap
+    - deb
+  maintainer: zhang.yuxin
+  category: Utility
+appImage:
+  artifactName: ${name}-${version}-${platform}-${arch}.${ext}
+npmRebuild: false
+publish:
+  provider: github
+  repo: lockpass
+  owner: ftyszyx
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
