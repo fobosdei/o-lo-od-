@@ -16,7 +16,13 @@ import { MainWindow } from '@main/windows/window.main'
 import { QuickSearchWindow } from '@main/windows/window.quicksearch'
 import { MyTray } from '@main/windows/mytray'
 import { initAllApi } from '@main/api/index.api'
-import robot from 'robotjs_addon'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let robot: any = null
+try {
+  robot = require('robotjs_addon').default ?? require('robotjs_addon')
+} catch {
+  console.warn('robotjs_addon not available on this platform')
+}
 import { ApiRespCode, defaultUserSetInfo, UserSetInfo } from '@common/entitys/app.entity'
 import { AppEvent, AppEventType } from '@main/entitys/appmain.entity'
 import {
@@ -269,6 +275,10 @@ class AppModel {
       const logininfo = info.info as LoginPasswordInfo
       if (!logininfo.username_auto_fill && !logininfo.password_auto_fill) {
         AppEvent.emit(AppEventType.Message, 'error', 'not autoinput config')
+      }
+      if (!robot) {
+        AppEvent.emit(AppEventType.Message, 'error', 'auto-fill not available on this platform')
+        return
       }
       robot.moveMouse(this.last_point.x, this.last_point.y)
       robot.keyTap('space', 'control') //切换成英文

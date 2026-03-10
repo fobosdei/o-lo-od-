@@ -7,7 +7,13 @@ import { MainToWebMsg } from '@common/entitys/ipcmsg.entity'
 import { EntityType, renderViewType } from '@common/entitys/app.entity'
 import { Log } from '@main/libs/log'
 import AppModel from '@main/models/app.model'
-import robot from 'robotjs_addon'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let robot: any = null
+try {
+  robot = require('robotjs_addon').default ?? require('robotjs_addon')
+} catch {
+  console.warn('robotjs_addon not available on this platform')
+}
 import { APP_NAME } from '@common/gloabl'
 import { AppSetInfo } from '@common/entitys/set.entity'
 export class WindowBase {
@@ -139,8 +145,10 @@ export class WindowBase {
 
   show() {
     Log.info('show window', this.url)
-    console.log('last pos', robot.getMousePos())
-    AppModel.getInstance().setLastPoint(robot.getMousePos())
+    if (robot) {
+      console.log('last pos', robot.getMousePos())
+      AppModel.getInstance().setLastPoint(robot.getMousePos())
+    }
     this.win.show()
     this.win.webContents.send(MainToWebMsg.WindowsShow)
   }

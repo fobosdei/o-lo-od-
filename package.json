@@ -11,8 +11,8 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "start": "chcp 65001&&electron-vite preview ",
-    "dev": "chcp 65001 && electron-vite dev --inspect",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev --inspect",
     "build": "npm run typecheck && electron-vite build",
     "build:win": "electron-builder --win",
     "build:mac": " electron-builder --mac",
@@ -26,9 +26,11 @@
     "@electron-toolkit/utils": "^3.0.0",
     "electron-updater": "^6.3.4",
     "reflect-metadata": "^0.2.2",
-    "robotjs_addon": "^0.6.4",
     "sqlite3": "^5.1.7",
     "zip-lib": "^1.0.4"
+  },
+  "optionalDependencies": {
+    "robotjs_addon": "^0.6.4"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.4.0",
