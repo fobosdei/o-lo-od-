@@ -1,0 +1,88 @@
+{
+  "name": "vault-secure-password-manager",
+  "version": "1.0.0",
+  "description": "Gestor de contraseñas seguro con Electron, React, Three.js y Supabase",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:backend\" \"wait-on http://localhost:5173 && npm run dev:electron\"",
+    "dev:vite": "vite",
+    "dev:electron": "electron .",
+    "dev:backend": "cd backend && node server.js",
+    "build": "vite build",
+    "build:electron": "npm run build && electron-builder",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "password-manager",
+    "electron",
+    "react",
+    "three.js",
+    "supabase",
+    "security"
+  ],
+  "author": "crudo",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3",
+    "framer-motion": "^11.0.3",
+    "lucide-react": "^0.309.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "three": "^0.161.0",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "electron": "^40.8.0",
+    "electron-builder": "^26.8.1",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "vite": "^7.3.1",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.vault.passwordmanager",
+    "productName": "Vault - Password Manager",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "backend",
+        "filter": ["**/*", "!node_modules/**"]
+      },
+      {
+        "from": "backend/node_modules",
+        "to": "backend/node_modules",
+        "filter": ["**/*", "!.cache/**", "!.bin/**"]
+      },
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
+    "mac": {
+      "target": "dmg",
+      "icon": "src/assets/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "src/assets/icon.png"
+    }
+  }
+}
